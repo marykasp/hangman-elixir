@@ -3,17 +3,10 @@ defmodule Dictionary do
   Documentation for `Dictionary`.
   """
 
-  @doc """
-  Returns a list of words.
-
-  ## Examples
-  iex> Dictionary.word_list()
-
-  """
-  def word_list do
-    File.read!("assets/words.txt")
-    |> String.split(~r/\n/, trim: true)
-  end
+  # module attribute created at compile time
+  @word_list "assets/words.txt"
+             |> File.read!()
+             |> String.split(~r/\n/, trim: true)
 
   @doc """
   Returns a random word from the word list.
@@ -23,6 +16,7 @@ defmodule Dictionary do
   """
 
   def random_word do
-    Enum.random(word_list())
+    @word_list
+    |> Enum.random()
   end
 end
