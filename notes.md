@@ -74,7 +74,24 @@ to fetch and store code. `https://hex.pm`
 To include a hex dependency in profect, specify the application name and the version you require.
 
 - Separate API from implementation - put API at top level `lib/` directory and implementation below that `lib/impl`
-- `defdelegate` is a good way to ensure separation
+- `defdelegate` is a good way to ensure separ fbation
 - `alias` does more than save typing - also lets you decouple your code from actual module names
 - maps are a good way of representing state, `defstruct` can be used to make the structure static, predefining the keys and the default values
--
+
+# Tests
+- tests are located in subdirectory `test/`
+- If a test is specific to a module, it is conventional to name it `<<modulename>>_test.exs`.
+ ```elixir
+ddefmodule SomeTest do
+   use ExUnit.Case
+
+   test "description" do
+    assert <<expression>>
+   end
+  end
+````
+- The most common way to test to check something is using `assert`. Evaluates its argument and reports an error if `nil` or `false`
+- can use `__MODULE__` as a convenient way to reference the current module name
+
+
+Normally only test the public APIs of modules and never test internals. In this case actually looking at the module's state, which should be opaque to outside world.

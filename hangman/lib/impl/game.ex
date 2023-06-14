@@ -19,9 +19,15 @@ defmodule Hangman.Impl.Game do
     used: MapSet.new()
   )
 
+  # returns a list of characters of a random word from the dictionary
   def new_game do
-    %Hangman.Impl.Game{
-      letters: Dictionary.random_word() |> String.codepoints()
+    new_game(Dictionary.random_word())
+  end
+
+  # returns a list of characters of word passed in as parameter
+  def new_game(word) do
+    %__MODULE__{
+      letters: word |> String.codepoints()
     }
   end
 end
