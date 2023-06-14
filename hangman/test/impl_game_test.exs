@@ -52,4 +52,48 @@ defmodule HangmanImplGameTest do
 
     assert MapSet.equal?(game.used, MapSet.new(["x", "y"]))
   end
+
+  test "recognize guess is in word and check state is updated good_guess" do
+    game = Game.new_game("wombat")
+    {_game, tally} = Game.make_move(game, "m")
+    assert tally.game_state == :good_guess
+
+    {_game, tally} = Game.make_move(game, "b")
+    assert tally.game_state == :good_guess
+  end
+
+  test "recognize guess is not in word and check state is updated to bad_guess" do
+    game = Game.new_game("wombat")
+    {_game, tally} = Game.make_move(game, "n")
+    assert tally.game_state == :bad_guess
+
+    {_game, tally} = Game.make_move(game, "y")
+    assert tally.game_state == :bad_guess
+  end
+
+  test "can handle a sequence of guesses" do
+    # hello
+    [
+      # guess | state | turns_left | letters | used
+      ["a", :bad_guess, 6, ["_", "_", "_", "_", "_"], ["a"]],
+      ["e", :good_guess, 6, ["_", "_", "_", "_", "_"], ["a", "e"]],
+      ["x", :bad_guess, 5, ["_", "_", "_", "_", "_"], ["a", "e", "x"]]
+    ]
+    |> test_sequence_of_moves()
+  end
+
+  def test_sequence_of_moves(script) do
+    game = Game.new_game("hello")
+    Enum.reduce(script, game, &check_one_move/2)
+  end
+
+  def check_one_move([guess, state, turns, letters, used], game) do
+    {game, tally} = Game.make_move(game, guess)
+
+    assert tally.game_state == state
+    assert tally.turns_left == turns
+    assert tally.letters == letters
+    assert tally.used == used
+    game
+  end
 end
