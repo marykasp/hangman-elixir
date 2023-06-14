@@ -19,9 +19,11 @@ defmodule Hangman.MixProject do
   end
 
   # Run "mix help deps" to learn about dependencies.
+  # look into online Elixir module called Hex.pm for a modules named dialyxir
   defp deps do
     [
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:dictionary, path: "../dictionary"}
     ]
   end
 end
