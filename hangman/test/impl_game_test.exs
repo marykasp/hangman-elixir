@@ -76,8 +76,42 @@ defmodule HangmanImplGameTest do
     [
       # guess | state | turns_left | letters | used
       ["a", :bad_guess, 6, ["_", "_", "_", "_", "_"], ["a"]],
-      ["e", :good_guess, 6, ["_", "_", "_", "_", "_"], ["a", "e"]],
-      ["x", :bad_guess, 5, ["_", "_", "_", "_", "_"], ["a", "e", "x"]]
+      ["a", :already_used, 6, ["_", "_", "_", "_", "_"], ["a"]],
+      ["e", :good_guess, 6, ["_", "e", "_", "_", "_"], ["a", "e"]],
+      ["x", :bad_guess, 5, ["_", "e", "_", "_", "_"], ["a", "e", "x"]]
+    ]
+    |> test_sequence_of_moves()
+  end
+
+  test "can handle a winning game" do
+    # hello
+    [
+      # guess | state | turns_left | letters | used
+      ["a", :bad_guess, 6, ["_", "_", "_", "_", "_"], ["a"]],
+      ["a", :already_used, 6, ["_", "_", "_", "_", "_"], ["a"]],
+      ["e", :good_guess, 6, ["_", "e", "_", "_", "_"], ["a", "e"]],
+      ["x", :bad_guess, 5, ["_", "e", "_", "_", "_"], ["a", "e", "x"]],
+      ["l", :good_guess, 5, ["_", "e", "l", "l", "_"], ["a", "e", "l", "x"]],
+      ["o", :good_guess, 5, ["_", "e", "l", "l", "o"], ["a", "e", "l", "o", "x"]],
+      ["h", :won, 5, ["h", "e", "l", "l", "o"], ["a", "e", "h", "l", "o", "x"]]
+    ]
+    |> test_sequence_of_moves()
+  end
+
+  test "can handle a losing game" do
+    # hello
+    [
+      # guess | state | turns_left | letters | used
+      ["a", :bad_guess, 6, ["_", "_", "_", "_", "_"], ["a"]],
+      ["a", :already_used, 6, ["_", "_", "_", "_", "_"], ["a"]],
+      ["c", :bad_guess, 5, ["_", "_", "_", "_", "_"], ["a", "c"]],
+      ["x", :bad_guess, 4, ["_", "_", "_", "_", "_"], ["a", "c", "x"]],
+      ["e", :good_guess, 4, ["_", "e", "_", "_", "_"], ["a", "c", "e", "x"]],
+      ["g", :bad_guess, 3, ["_", "e", "_", "_", "_"], ["a", "c", "e", "g", "x"]],
+      ["h", :good_guess, 3, ["h", "e", "_", "_", "_"], ["a", "c", "e", "g", "h", "x"]],
+      ["i", :bad_guess, 2, ["h", "e", "_", "_", "_"], ["a", "c", "e", "g", "h", "i", "x"]],
+      ["k", :bad_guess, 1, ["h", "e", "_", "_", "_"], ["a", "c", "e", "g", "h", "i", "k", "x"]],
+      ["f", :lost, 0, ["h", "e", "_", "_", "_"], ["a", "c", "e", "f", "g", "h", "i", "k", "x"]]
     ]
     |> test_sequence_of_moves()
   end
