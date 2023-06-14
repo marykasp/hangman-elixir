@@ -95,3 +95,28 @@ ddefmodule SomeTest do
 
 
 Normally only test the public APIs of modules and never test internals. In this case actually looking at the module's state, which should be opaque to outside world.
+
+## Pattern Matching Game State
+- pattern matching can replace conditional code in functions.
+- patterns can match at many levels
+
+```elixir
+def make_move(%{game_state: :won} = game, _guess) do
+  {game, tally(game)}
+```
+The function will be called only if the first paramter is a map that has the key `game_state` that has a corresponding value of `:won`. The overall map is bound to the parameter `game`
+
+- A pattern can match multiple values at different levels
+```elixir
+def make_move({%{game_state: state} = game, _guess})
+```
+
+This will match any call where the first parameter is a map containing a key `game_state`. The corresponding value will be bound to t he parameter `state`
+- A `when` cluase (**guard clause**) can further restrict when a particular variant of a function can be called. `when` is executed after the parameters are bound
+
+#### Avoid Conditional Logic Inside Functions
+`if, unless, case, cond`
+
+If you add a conditional statement to a function, you double the number of execution paths through it. One `if` means two paths. Elixir's pattern matching supports a style
+of coding functions that can be conditional free. Instead you choose a single purpose for each variant of a function then use pattern matching and guard clauses to ensure the correct
+variant is called in the correct context.
