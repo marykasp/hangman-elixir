@@ -120,3 +120,7 @@ This will match any call where the first parameter is a map containing a key `ga
 If you add a conditional statement to a function, you double the number of execution paths through it. One `if` means two paths. Elixir's pattern matching supports a style
 of coding functions that can be conditional free. Instead you choose a single purpose for each variant of a function then use pattern matching and guard clauses to ensure the correct
 variant is called in the correct context.
+
+If the game state is not won or lost then need to check the guess the user made. Use a helper function `accept_guess(game, guess, boolean)` - `MapSet.member?(game.used, guess)` checks
+if guess in in the `game.used` value. If so returns `true`. Use pattern matching on `accept_guess` for already_used guess and a new guess. An already used guess will change the
+game state to `:already_used` and a new guess will be added to `game.used` (`MapSet.put(game.used, guess)`)
