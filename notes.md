@@ -155,3 +155,12 @@ def countdown(n) do
   end
 end
 ```
+
+## Text Client
+- Fleshed out the main components by writing some empty functions and some comments
+- `@type` used to describe the state being passed into the recursive `interact` function - `{game, tally}`
+  - both items of the state tuple type were defined in the `Hangman` module
+- Inside the loop first need to get the state of the game (`tally.game_state`) and use pattern
+matching on feedback function to determine what to print to the console
+- Exposed the `tally(game)` function in the Hangman.Game module to the Hangman API client - need both the game `new_game()` and the tally `tally(game)` in order to start a game on
+text client

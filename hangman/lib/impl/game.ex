@@ -39,7 +39,7 @@ defmodule Hangman.Impl.Game do
 
   @doc """
   Make move will have pattern matching functions to match on the state of game.
-  Returns a tuple {game, tally}
+  Returns a tuple {game, tally} - tally contains same state as game with letters including only those guessed correctly
 
   :won - returns game and a new tally map (used letters are converted from MapSet to list)
   :lost - returns game and a new tally map
@@ -94,7 +94,7 @@ defmodule Hangman.Impl.Game do
 
   ## game is updated with make_move, accept_guess, and score_guess - uses game state
   # tally letters track which letters that were correct user guessed
-  defp tally(game) do
+  def tally(game) do
     %{
       turns_left: game.turns_left,
       game_state: game.game_state,
