@@ -124,3 +124,34 @@ variant is called in the correct context.
 If the game state is not won or lost then need to check the guess the user made. Use a helper function `accept_guess(game, guess, boolean)` - `MapSet.member?(game.used, guess)` checks
 if guess in in the `game.used` value. If so returns `true`. Use pattern matching on `accept_guess` for already_used guess and a new guess. An already used guess will change the
 game state to `:already_used` and a new guess will be added to `game.used` (`MapSet.put(game.used, guess)`)
+
+## Loops and State
+Most languages uses loops to perform tasks. These loops will read and write from variables in the surrounding context. A global variable is set before the loop started (JS `while` loops).
+It is then updated every iteration and tested to see if the loop is done.
+
+In a functional language this is not possible since cannot update variables (immutable data). Instead need to use **recursion**.
+Make body of loop the body of a function, and then have that function call itself at the end to kick off another iteration.
+
+Typically a loop works on some values either reading or writing them and need to loop to terminate too. The functions in elixir cannot rely on the surrounding state.
+Instead we need to pass the state into the function, first when start running it, and then each time it calls itself recursively. This allows the function to pass itself
+updated state, and use that both as data to process and to know when to terminate.
+
+
+### Tail call optimization
+> "To iterate is human, to recurse, divine"
+
+**TCO** is a compile-time trick that looks at code in recursive functions. The compiler determines that the last thing that a functiond does before exiting is to call itself, then it
+can replace that call with a simple jump back to the top of the function's code. The compile just has to set the values of the local variable that hold the function's parameters before jumping.
+
+The recursive call does not have to be the last line of the function it just has to be the las thing executed during a particular path through the function.
+
+```elixir
+def countdown(n) do
+  IO.puts n
+  if n > 0 do
+    countdown(n-1)
+  else
+    IO.puts "LIFTOFF!"
+  end
+end
+```

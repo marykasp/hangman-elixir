@@ -108,6 +108,7 @@ defmodule Hangman.Impl.Game do
     |> Enum.map(fn letter ->
       # check if already guessed the letter
       MapSet.member?(game.used, letter)
+      # if did guess the letter in the word then return letter if not return _ to add to list
       |> maybe_reveal(letter)
     end)
   end

@@ -44,13 +44,18 @@ defmodule HangmanImplGameTest do
 
   test "we record new guess to MapSet" do
     game = Game.new_game()
+    # new guess
     {game, _tally} = Game.make_move(game, "x")
 
+    #  new guess
     {game, _tally} = Game.make_move(game, "y")
 
+    # guess already used
     {game, _tally} = Game.make_move(game, "x")
 
     assert MapSet.equal?(game.used, MapSet.new(["x", "y"]))
+    # since reused "x" the game state will be changed to already_used
+    assert game.game_state == :already_used
   end
 
   test "recognize guess is in word and check state is updated good_guess" do
@@ -116,6 +121,7 @@ defmodule HangmanImplGameTest do
     |> test_sequence_of_moves()
   end
 
+  # returns the game struct with updated game state, turns left, correct list of letters, and sorted Mapset of guesses
   def test_sequence_of_moves(script) do
     game = Game.new_game("hello")
     Enum.reduce(script, game, &check_one_move/2)
