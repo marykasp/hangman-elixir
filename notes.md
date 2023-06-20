@@ -284,3 +284,16 @@ a directly-called library or in a separate process.
     - project/library that also has its own lifecyle (starts and manages itself)
 
 Run `Dictionary` as an Application
+- an application can have a module that acts as its entry point - `lib/appname/application.ex` or in `lib/runtime/application.ex`
+-  module must have a function `start/2` - this function is invoked automatically at runtime if register the entry pont module in `mix.exs`
+`mod: {Dictionary.Runtime.Application, []}` when elixir runs the project it will call `start/2` function inside this listed module
+
+- the `start/2` function should return the tuple `{:ok, pid}` where `pid` is the process ID of the root of the application
+- module attributes are like constants - one use is to identify values used throughout the module - `@me or @pid` to refer to the registered name of the agent process
+
+## Runtime Processes
+Runtime maintains a registry - can be used to asscoiate names and pids. Once registered, you can use the name anywhere you could have used pid.
+- adding `{name: @me}` to `Agent.start_link` call we are asking the agent library to handle the registration for us
+- form of the `name:` option registers a anme that is local to the node that runs the code
+- good to name your processes since if you need to be able to use them after they crash and get restarted. Such restarted processes will have a different pid, but the same
+name will be mapped to the new pid.
