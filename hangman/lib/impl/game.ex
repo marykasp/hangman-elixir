@@ -24,8 +24,7 @@ defmodule Hangman.Impl.Game do
   # returns a list of characters of a random word from the dictionary
   @spec new_game() :: t
   def new_game do
-    word_list = Dictionary.start()
-    new_game(Dictionary.random_word(word_list))
+    new_game(Dictionary.random_word())
   end
 
   # returns a list of characters of word passed in as parameter

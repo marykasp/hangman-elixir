@@ -250,3 +250,26 @@ defmodule HitCount do
   end
 end
 ```
+
+# Runtime and Compile Time
+*Runtime* - environment in which the code runs
+- process structure
+- configuration
+- error handling
+- scaling
+
+*Compile time* - code that implements the business logic
+- problem specific
+- algorithms
+- data structures
+- stuff that is unit tested
+## Update Dictionary module
+- initialize an Agent to store the state of the generated word list (holds the state) so don't have to generate the word list every time
+start a new game
+
+Steps taken to implement runtime vs compile time for Dictionary:
+1. create a `runtime/server.ex` module that contains state without changing the logic - the implementation code has no idea whether it is running as
+a directly-called library or in a separate process.
+2. API change -> add a function to start the agent running
+ - need to change the `@opaque` type `t` from being a `WordList.t` to a `Server.t`, this will not affect any code that used the dictionary.
+ API module that can decouple details of the implementation from the clients of the code.
