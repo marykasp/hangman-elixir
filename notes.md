@@ -192,6 +192,29 @@ def hello do
   end
   hello()
 end
+
+pid = spawn Procs, :hello, []
+send pid, "elixir"
 ```
 - messages sent to nonexistent processes are thrown away
 - use recursion to implement a receiver loop in the process, once a `pid` receives a message it will shut down this prevents that
+
+#### Pattern Matching Messages
+- maintain state in the process by passing it as a parameter in the recursive call. You can update this state when handling a message
+- use pattern matching in the body of the `receive` call
+
+```elixir
+receive do
+  pattern_1 ->
+    code
+
+  pattern_2 ->
+    code_2
+
+  pattern_n ->
+    code_n
+end
+```
+- The incoming message is matched against each pattern in turn. When one matches, the corresponding code is run, and the receive is complete.
+- `receive` waits for a message to arrive, binds it to a variable (will match on the correct pattern), then executes the associated code
+- messages sent to nonexistent processes are thrown away
