@@ -297,3 +297,36 @@ Runtime maintains a registry - can be used to asscoiate names and pids. Once reg
 - form of the `name:` option registers a anme that is local to the node that runs the code
 - good to name your processes since if you need to be able to use them after they crash and get restarted. Such restarted processes will have a different pid, but the same
 name will be mapped to the new pid.
+
+Dictionary is now an agent - share one word list amongst any number of clients
+
+# Supervisors
+- supervisor monitors one or more processes
+- a supervisor is just another process, supervisors can also monitor other supervisors - **supervision trees**
+ - has nothing to do with process tree
+ - keep application up and running
+ - processes do the work and are separate from the supervision tree
+- supervisors sit outside the regular process structure
+
+### Add Supervisor to Dictionary
+- supervisors start other processes, it's likely that the root level process of a supervised application will be the top level supervisor
+- specify a supervisor inside the `application.ex` file
+- `Supervisor.start_link`, passing a list of children and a set of options
+
+## Worker Specifications
+The supervisor needs to know a lof of information about each of the processes it manages. The list of children passed to `Supervisor.start_link` is a set of tuples, each containing
+the name of a module and any parameters to be passed when the processes start.
+
+Each of the child modules then implements function called `child_spec` which returns a data structure containing the child parameters.
+
+Can use ELixir behaviors to create a default version. Updating `Runtime.Server` with `use Agent` adds the `child_spec function to the module`
+
+## Supervisor Options
+The second parameter to `Supervisor.start_link` is a keyword list. This list can contain many options, here are some common ones:
+- `strategy: one_for_one | one_for_all | rest_for_one | simple_one_for_one`
+- `max_restarts: n max_seconds: s`
+
+Tells the supervisor how to handle child creation and failures. We used `one_for_one`, where each child process has an independent life. If a child process dies,
+it alone is restarted and not the rest in the children list.
+If more than `n` restarts occur in a period of specified seconds, the supervisor shuts down all its supervised processes and then terminates itself.
+- `max_restarts` defaults to 1 and `max_seconds` defaults to 5 - so dictionary supervisor will be done when more than one restart happens in a 5 second period

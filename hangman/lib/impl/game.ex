@@ -21,7 +21,10 @@ defmodule Hangman.Impl.Game do
   )
 
   #####################################################################
-  # returns a list of characters of a random word from the dictionary
+  @doc """
+  Starts a new game by generating a random word from the list of words on the server state.
+  Then creates a new game struct with the letters of that word stored in a list of strings on letters.
+  """
   @spec new_game() :: t
   def new_game do
     new_game(Dictionary.random_word())
