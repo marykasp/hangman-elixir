@@ -104,11 +104,20 @@ defmodule Hangman.Impl.Game do
     }
   end
 
-  defp reveal_guessed_letters(%{game_state: :lost} = game) do
+  @doc """
+  Will take in the game struct, if the game is lost will just reveal the letters of the word from the
+  game letters list.
+
+  Otherwise will update the tally struct letters to include the letter if guessed or to include an _ if not
+  already guessed. Iterates over the game.letters, checks if the letter is a member of the used mapset, if
+  so then will reveal the letter if not then will add _
+  """
+
+  def reveal_guessed_letters(%{game_state: :lost} = game) do
     game.letters
   end
 
-  defp reveal_guessed_letters(game) do
+  def reveal_guessed_letters(game) do
     game.letters
     |> Enum.map(fn letter ->
       # check if already guessed the letter

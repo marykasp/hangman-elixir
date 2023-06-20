@@ -3,6 +3,10 @@ defmodule TextClient.Impl.Player do
   @type tally :: Hangman.tally()
   @type state :: {game, tally}
 
+  @doc """
+  Starts a new hangman game by generating a new word and updating the game struct.
+  Also generates a tally struct.
+  """
   @spec start() :: :ok
   def start() do
     game = Hangman.new_game()
@@ -10,8 +14,12 @@ defmodule TextClient.Impl.Player do
     interact({game, tally})
   end
 
+  @doc """
+  Takes the state of the game (game, tally) and based on the state displays different string output.
+  If the game is not won or lost then get feedback depending on start, show the status of the game,
+  and then get the guess from the user in order to make a move.
+  """
   @spec interact(state) :: :ok
-
   def interact({_game, %{game_state: :won}}) do
     IO.puts("Congratulatins! You won!")
   end
@@ -30,6 +38,8 @@ defmodule TextClient.Impl.Player do
     Hangman.make_move(game, get_guess())
     |> interact()
   end
+
+  ###########################################################################
 
   @doc """
   Function that checks the game state on the tally map and pattern matches for different sentences to return to console based
