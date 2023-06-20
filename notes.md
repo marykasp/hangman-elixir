@@ -218,3 +218,14 @@ end
 - The incoming message is matched against each pattern in turn. When one matches, the corresponding code is run, and the receive is complete.
 - `receive` waits for a message to arrive, binds it to a variable (will match on the correct pattern), then executes the associated code
 - messages sent to nonexistent processes are thrown away
+
+- `spawn` creates an **isolated process** - it is independent of the process that created it. Don't receive any notification that it has quit or died
+- `spawn_link` links the creating and created process - if one dies (created process) the other is also killed
+
+### Agents: Abstraction Over State
+- Agents are an abstraction that keep state in a separate process
+- call `Agent.start_link` with a function to initialize the state
+- `Agent.get(pid, func)` runs the function in the agent, passing it the state. The value returned by the function is the value returned by `get`
+- `Agent.update(pid, func)` runs the function the the agent, passing it the state. The value returned by the function becomes the new state
+- `Agent.get_and_update(pid, func)` runs the function with the run. The function should return a two element tuple containing the return value to be passed
+to the caller and the updated state.

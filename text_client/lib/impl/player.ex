@@ -9,6 +9,7 @@ defmodule TextClient.Impl.Player do
   """
   @spec start() :: :ok
   def start() do
+    # generates a word list (Dictionary.start), picks a random word, and adds the letters to games.letters
     game = Hangman.new_game()
     tally = Hangman.tally(game)
     interact({game, tally})
