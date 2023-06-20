@@ -273,3 +273,14 @@ a directly-called library or in a separate process.
 2. API change -> add a function to start the agent running
  - need to change the `@opaque` type `t` from being a `WordList.t` to a `Server.t`, this will not affect any code that used the dictionary.
  API module that can decouple details of the implementation from the clients of the code.
+
+ `Dictionary Module`
+`lib/impl/word_list/ex` - Library, runs in caller's process, caller holds state
+ - called in the Agent
+`lib/runtime/server.ex` - Process, runs in own process, holds own state - persists
+  1. Controlled by client - call `start_link` to get it running, client manages lifecyle of dictionary
+
+  2. Independent Process - started automatically, manages its own lifecycle (**application**)
+    - project/library that also has its own lifecyle (starts and manages itself)
+
+Run `Dictionary` as an Application
