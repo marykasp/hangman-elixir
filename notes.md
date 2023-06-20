@@ -164,3 +164,17 @@ end
 matching on feedback function to determine what to print to the console
 - Exposed the `tally(game)` function in the Hangman.Game module to the Hangman API client - need both the game `new_game()` and the tally `tally(game)` in order to start a game on
 text client
+
+# Spawn Processes
+`spawn` runs a function in a separate process - takes either an anonymous function or (module, name of function, list of arguments)
+`MFA` - Module, Function, Arguments
+- the module part is simply its name, the function is the function name as an atom, and the arguments are represented as a list. The number of functions
+in the list must match the arity of the function being called.
+- `Process.sleep` delays the execution of the spawned function but starts the process (each has a unique `pid`)
+
+Elixir processes are cheap - you can create one in less than 10microseconds and each takes less than 3k of memory (including their initial heap and stack)
+
+
+```elixir
+spawn(Procs, :hello, ["world"])
+```
