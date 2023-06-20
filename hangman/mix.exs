@@ -12,6 +12,7 @@ defmodule Hangman.MixProject do
   end
 
   # Run "mix help compile.app" to learn about applications.
+  # returns to runtime system list of applications to get started
   def application do
     [
       extra_applications: [:logger]

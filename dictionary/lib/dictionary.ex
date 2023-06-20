@@ -8,14 +8,8 @@ defmodule Dictionary do
   @opaque t :: Server.t()
 
   @doc """
-  Reads the words in the word.txt file and generates a list of those words.
-  """
-  @spec start_link() :: {:ok, t}
-  defdelegate start_link(), to: Server
-
-  @doc """
   Picks a random word from the word list
   """
-  @spec random_word(t) :: String.t()
-  defdelegate random_word(word_list), to: Server
+  @spec random_word() :: String.t()
+  defdelegate random_word(), to: Server
 end

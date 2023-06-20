@@ -4,13 +4,22 @@ defmodule Dictionary.Runtime.Server do
   """
 
   @type t :: pid()
+  @me __MODULE__
   alias Dictionary.Impl.WordList
 
+  @doc """
+  Initializes the state on the server - generates a list of words.
+  """
   def start_link() do
-    Agent.start_link(&WordList.word_list/0)
+    # generate process with a pid and register id of pid under name passed in
+    Agent.start_link(&WordList.word_list/0, name: @me)
   end
 
-  def random_word(pid) do
-    Agent.get(pid, &WordList.random_word/1)
+  @doc """
+  Uses state on pid to get random word from the list
+  """
+  def random_word() do
+    # look up name of pid under the alias name
+    Agent.get(@me, &WordList.random_word/1)
   end
 end
