@@ -167,6 +167,7 @@ text client
 
 # Spawn Processes
 `spawn` runs a function in a separate process - takes either an anonymous function or (module, name of function, list of arguments)
+
 `MFA` - Module, Function, Arguments
 - the module part is simply its name, the function is the function name as an atom, and the arguments are represented as a list. The number of functions
 in the list must match the arity of the function being called.
@@ -178,3 +179,19 @@ Elixir processes are cheap - you can create one in less than 10microseconds and 
 ```elixir
 spawn(Procs, :hello, ["world"])
 ```
+
+## Sending and Receiving Messages
+- `send` function sends a message to a process
+- `send pid, argument`
+- `receive` waits for a message to arrive, binds it to a variable, then executes the associated code
+```elixir
+def hello do
+  receive do
+    msg ->
+      IO.puts "Hello #{inspect(msg)}"
+  end
+  hello()
+end
+```
+- messages sent to nonexistent processes are thrown away
+- use recursion to implement a receiver loop in the process, once a `pid` receives a message it will shut down this prevents that
