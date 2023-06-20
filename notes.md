@@ -223,9 +223,30 @@ end
 - `spawn_link` links the creating and created process - if one dies (created process) the other is also killed
 
 ### Agents: Abstraction Over State
+The functions passed as arguments to the calls to `Agent` functions are invoked inside the agent (the server). The server is started and then the function is called.
 - Agents are an abstraction that keep state in a separate process
+  - an agent contains just state - all functions that work on the state are provided **externally** - in calls to `get, update, get_and_update`
+  - important to wrap agents inside a module, and only expose them through that modules API
+
 - call `Agent.start_link` with a function to initialize the state
 - `Agent.get(pid, func)` runs the function in the agent, passing it the state. The value returned by the function is the value returned by `get`
 - `Agent.update(pid, func)` runs the function the the agent, passing it the state. The value returned by the function becomes the new state
 - `Agent.get_and_update(pid, func)` runs the function with the run. The function should return a two element tuple containing the return value to be passed
 to the caller and the updated state.
+
+```elixir
+defmodule HitCount do
+
+  def start() do
+    Agent.start_link(fn -> 0 end)
+  end
+
+  def record_hit(agent) do
+    Agent.update(agent, &(&1 + 1))
+  end
+
+  def get_count(agent) do
+    Agent.get(agent, &(&1))
+  end
+end
+```
