@@ -36,8 +36,9 @@ defmodule TextClient.Impl.Player do
     IO.puts(current_word(tally))
     # get the next guess
     # make move based on guess
-    Hangman.make_move(game, get_guess())
-    |> interact()
+    tally = Hangman.make_move(game, get_guess())
+
+    interact({game, tally})
   end
 
   ###########################################################################

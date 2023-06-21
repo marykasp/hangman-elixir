@@ -454,3 +454,19 @@ Dynamically creating hangman games under game starter (Supervisor application th
   end
 
 ```
+
+Code for Hangman application does two things:
+1. server process plays the game (`GenServer.call(pid, move)`)
+2. API code that interfaces between the client and the server process
+  - runs in the client's process and uses `GenServer.call` to forward requests on to the Hangman server process
+
+TextClient - want hangman server to run on same node
+- don't want to start hangman server whenever start a client
+- this is due to `mix.exs` in the `TextClient` - have a dependency to the `Hangman`, elixir will automatically start a dependency that is an application
+- will start automatically when textclient is loaded
+
+- want Hangman application to be loaded but not yet to start
+`applicaiton function include hangman application`
+ - load code for Hangman application but not start it, just including the code
+
+ In `iex -S mix` should be able to access `Hangman` and if run `:observer.start` will not find Hangman.Server since haven't started it yet
