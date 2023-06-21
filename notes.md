@@ -381,9 +381,10 @@ API (`dictionary.ex`, `hangman.ex`) -> `runtime/server` -> `impl/game, impl/word
 (dictionary also has an application layer in runtime which sets up a supervisor to manage child processes - if one crashes will be restarted)
 - the state is stored on the servers
 
+## Project Structure
 `my_project.ex` defines the API (no implementation just `defdelegate` to the server)
-The files in the `impl` subdirectory implement the application logic. They are simple, linear code
-The files under `runtime` implement all the functionality that makes the code actually run.
+**Code Logic** : The files in the `impl` subdirectory implement the application logic. They are simple, linear code
+**Runtime Logic**: The files under `runtime` implement all the functionality that makes the code actually run.
   - `application.ex` file is the interface to the Elixir runtime, telling it when to start
   - `server.ex` file implements the `GenServer` layer on top of the code in `impl`
 
@@ -402,3 +403,54 @@ Split code into 3 modules - API, server, and implementation
 The API always sits at the top level, and the implementation and server in separate subdirectories (`impl`, `runtime`). The server is solely responsible for handling the
 GenServer callbacks and managing the state (layer on top of the implementation code). The implementation is just a standalone set of functions that know how to get some problem
 solved, but know nothing about the client, and nothing about being a server.
+
+# Nodes and Remote Processes
+**node** - instance of Elixir/Erlang runtime
+- each node is isolated, for two nodes to connect each must have same name
+- short names are used for nodes on the same computer, long names for networked nodes
+- **node** - running instance of VM -> inside node running applications (starts with mix session)
+
+### Specify Node Name
+Short names are specified using just the node's name. The host name of the machine running the node will be added by runtime.
+`mix --sname node1`
+
+Long names include the fully qualified domain name or IP address
+`mix --name node1@quarry.bedrock.com`
+
+### Name a PID
+Associate a name with a PID
+`Process.register(pid, :name)` - creates a connection, you can use the name when sending messages
+`pid = spawn...`
+`Process.register(pid, :my_process)`
+
+`send(pid, :hello)` vs. `send(:my_process, :hello)`
+
+## Chain of Nodes
+Each node will know about next node in chain, trigger will send node id to second node, second node puts own id at front of list...
+`[:four, :three, :two, :one]`
+
+```
+Runtime creates application
+  -> application creates Supervisor (top level, same as Dictionary supervisor that manages the agent server process)
+  -> Supervisor supervisers a Dynamic Supervisor
+  -> Dynamic Supervisor will supervise each Hangman server
+
+```
+
+Dynamically creating hangman games under game starter (Supervisor application that supervises the dynamic supervisors for each hangman server)
+
+```elixir
+  def start(_type, _args) do
+    supervisor_spec = [
+      {DynamicSupervisor, strategy: :one_for_one, name: @super_name}
+    ]
+
+    Supervisor.start_link(supervisor_spec, strategy: :one_for_one)
+  end
+
+  # starts individual hangman server
+  def start_game do
+    DynamicSupervisor.start_child(@super_name, {Hangman.Runtime.Server, nil})
+  end
+
+```
