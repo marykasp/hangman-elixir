@@ -372,3 +372,33 @@ end
 return_value = GameServer.call(pid, {:make_move, "a"})
 
 ```
+
+## Review of Code Organization - API, Server, Implementation Logic
+- keep actual implementation separate from the code that is the server (`dictionary/impl/word_list`, `hangman/impl/game`)
+- server is invoked from the API and then delegates processing to implementation
+
+API (`dictionary.ex`, `hangman.ex`) -> `runtime/server` -> `impl/game, impl/word_list`
+(dictionary also has an application layer in runtime which sets up a supervisor to manage child processes - if one crashes will be restarted)
+- the state is stored on the servers
+
+`my_project.ex` defines the API (no implementation just `defdelegate` to the server)
+The files in the `impl` subdirectory implement the application logic. They are simple, linear code
+The files under `runtime` implement all the functionality that makes the code actually run.
+  - `application.ex` file is the interface to the Elixir runtime, telling it when to start
+  - `server.ex` file implements the `GenServer` layer on top of the code in `impl`
+
+## GenServer Behavior
+Tell Elixir that a module implements the GenServer behavior with `use GenServer` expression.
+  - `use` expression calls a macro in the given module, macro generates code that is injected back into module.
+  - `GenServer` the macro tells Elixir taht our module can be used as a server, and defines defaul implementations of most of the callback functions.
+  - `start_link` function is called directly by code that want to kick off our server. It runs in the same process as the code. Calls `GenServer.start_link` which starts
+  the new server process.
+  - Once that process is running the GenServer framework calls the `init` function which is responsible for returning the initial state `{:ok, game}`
+
+- `:observer.start` in `iex -S mix` is an easy way to look into your server (including the current state - determine the pid, click on process and view state)
+
+## SOP - Separation Of Concerns
+Split code into 3 modules - API, server, and implementation
+The API always sits at the top level, and the implementation and server in separate subdirectories (`impl`, `runtime`). The server is solely responsible for handling the
+GenServer callbacks and managing the state (layer on top of the implementation code). The implementation is just a standalone set of functions that know how to get some problem
+solved, but know nothing about the client, and nothing about being a server.
