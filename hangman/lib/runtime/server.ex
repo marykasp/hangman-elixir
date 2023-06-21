@@ -5,7 +5,8 @@ defmodule Hangman.Runtime.Server do
   @type t :: pid
 
   ### Client process
-  def start_link do
+  # start_link is being done by supervisor so expects a dummy paramter
+  def start_link(_) do
     # kick off a server - creates a brand new process - callsback to init function
     GenServer.start_link(__MODULE__, nil)
   end

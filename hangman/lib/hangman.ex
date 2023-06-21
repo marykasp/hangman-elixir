@@ -9,7 +9,7 @@ defmodule Hangman do
   # returns a game token - represents the state of the game
   @spec new_game() :: game
   def new_game do
-    {:ok, pid} = Server.start_link()
+    {:ok, pid} = Hangman.Runtime.Application.start_game()
     pid
   end
 

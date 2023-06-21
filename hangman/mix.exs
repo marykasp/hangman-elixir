@@ -15,6 +15,7 @@ defmodule Hangman.MixProject do
   # returns to runtime system list of applications to get started
   def application do
     [
+      mod: {Hangman.Runtime.Application, []},
       extra_applications: [:logger]
     ]
   end
