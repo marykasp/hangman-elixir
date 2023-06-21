@@ -14,7 +14,7 @@ defmodule Hangman.Runtime.Server do
     {:ok, Game.new_game()}
   end
 
-  # make a move - handle call
+  # handle calls - request from client to make a move, get tally
   def handle_call({:make_move, guess}, _form, game) do
     {updated_game, tally} = Game.make_move(game, guess)
     # returns value, updated state

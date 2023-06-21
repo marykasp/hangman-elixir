@@ -330,3 +330,45 @@ Tells the supervisor how to handle child creation and failures. We used `one_for
 it alone is restarted and not the rest in the children list.
 If more than `n` restarts occur in a period of specified seconds, the supervisor shuts down all its supervised processes and then terminates itself.
 - `max_restarts` defaults to 1 and `max_seconds` defaults to 5 - so dictionary supervisor will be done when more than one restart happens in a 5 second period
+### Processes
+- mix.exs -> Runtime  -> application.ex -> Supervisor -> server.ex -> Agent -> word_list.ex
+
+### Client Process
+client code <-> Dictionary API (dictionary.ex) <-> Server interface (runtime/server.ex) [returns a message to client code]
+
+
+server interace <-> agent process (Dictionary API (impl/word_list.ex)) <- supervisor (monitors)
+
+Not multiplexing state - each process is managing its own state (self contained)
+each client talk to own hangman process - the process is the state fore the game
+
+processes in elixir world are called servers
+- dictionary is an agent - an agent is a kind of server
+
+`GenServer` - Erlang OTP framework, abstration of a generic server, two sets of APIs
+will wrap any server in the elixir world (abstraction)
+1. **External API** - start, invoke, monitor, stop (calling process)
+2. **Internal callbacks** - initialize, handle requests, handle events (server process - code is called using callbacks)
+
+```elixir
+{:ok, pid} = GenServer.start_link(GameServer, args)
+
+defmodule GameServer do
+  use GenServer
+
+  # use the arguments to create state
+  def init(args) do
+    state = create_state(args)
+    # returns tuple with atom and state - state can be passed to all future callbacks that get invoked
+    {:ok, state}
+  end
+
+  def handle_call({:make_move, guess}, _from, state) do
+    # make the move, and update the state
+    {:reply, return_value, new_state}
+  end
+end
+
+return_value = GameServer.call(pid, {:make_move, "a"})
+
+```
