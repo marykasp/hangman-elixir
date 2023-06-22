@@ -1,0 +1,59 @@
+<h2 class="tracking-wider font-semibold text-xl mb-5">New Hangman Game</h2>
+<div id="game" class="flex flex-row space-x-10">
+  <div class="w-1/2 ">
+    <pre class="bg-gray-100 border-l-4  border-sky-500">
+      <%= figure_for(@tally.turns_left) %>
+    </pre>
+  </div>
+
+  <div class="">
+    <table class="bg-white divide-y divide-gray-200 ">
+      <tr>
+        <td class="px-4 py-2 text-sm font-bold text-gray-700 whitespace-nowrap">
+          <span>Turns left:</span>
+        </td>
+        <td class="px-4 py-2 text-md font-bold text-sky-500  whitespace-nowrap">
+          <%= @tally.turns_left %>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="px-4 py-2 text-sm font-bold text-gray-700 whitespace-nowrap">
+          <span>Letters used:</span>
+        </td>
+        <td class="px-4 py-2 text-md font-bold text-gray-500 whitespace-nowrap">
+          <%= @tally.used |> Enum.join(", ") %>
+        </td>
+      </tr>
+      <tr>
+        <td class="px-4 py-2 text-sm font-bold text-gray-700 whitespace-nowrap">
+          <span>Word so far:</span>
+        </td>
+        <td class="px-4 py-2 text-md font-bold text-gray-500 whitespace-nowrap">
+          <%= @tally.letters |> Enum.join(" ") %>
+        </td>
+      </tr>
+    </table>
+
+    <%= move_status(@tally.game_state) |> raw %>
+
+    <%= continue_or_try_again(@conn, @tally.game_state) %>
+    <!-- <.form -->
+    <!--   :let={f} -->
+    <!--   for={@conn} -->
+    <!--   action="update" -->
+    <!--   as={:make_move} -->
+    <!--   method="put" -->
+    <!--   class="inline-flex items-center space-x-4  px-4" -->
+    <!-- > -->
+    <!--   <.input -->
+    <!--     field={{f, :guess}} -->
+    <!--     name="guess" -->
+    <!--     value="" -->
+    <!--     extend_class="max-w-[4rem] text-md font-bold" -->
+    <!--   /> -->
+    <!---->
+    <!--   <.button type="submit" class="mt-[0.3rem]">Make next guess</.button> -->
+    <!-- </.form> -->
+  </div>
+</div>
