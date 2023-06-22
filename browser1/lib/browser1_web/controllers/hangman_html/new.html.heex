@@ -1,11 +1,50 @@
-<h2>New Hangman Game</h2>
+<h2 class="tracking-wider font-semibold text-xl mb-5">New Hangman Game</h2>
+<div id="game" class="flex flex-row space-x-10">
+  <div class="w-1/2 ">
+    <pre class="bg-gray-100 border-l-4  border-sky-500">
+      <%= figure_for(@tally.turns_left) %>
+    </pre>
+  </div>
 
-<p>
-  Turns left: <%= @tally.turns_left %>
-</p>
-<p>
-  Letters used: <%= @tally.used |> Enum.join(", ") %>
-</p>
-<p>
-  Word so far: <%= @tally.letters |> Enum.join(" ") %>
-</p>
+  <div class="">
+    <table class="bg-white divide-y divide-gray-200 ">
+      <tr>
+        <td class="px-4 py-2 text-sm font-bold text-gray-700 whitespace-nowrap">
+          <span>Turns left:</span>
+        </td>
+        <td class="px-4 py-2 text-sm font-semidbold text-sky-500  whitespace-nowrap">
+          <%= @tally.turns_left %>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="px-4 py-2 text-sm font-bold text-gray-700 whitespace-nowrap">
+          <span>Letters used:</span>
+        </td>
+        <td class="px-4 py-2 text-sm text-gray-500 whitespace-nowrap">
+          <%= @tally.used |> Enum.join(", ") %>
+        </td>
+      </tr>
+      <tr>
+        <td class="px-4 py-2 text-sm font-bold text-gray-700 whitespace-nowrap">
+          <span>Word so far:</span>
+        </td>
+        <td class="px-4 py-2 text-sm text-gray-500 whitespace-nowrap">
+          <%= @tally.letters |> Enum.join(" ") %>
+        </td>
+      </tr>
+    </table>
+
+    <.form :let={f} for={@conn} action="update" as={:make_move} method="put" class="mt-3 px-4">
+      <.input
+        field={{f, :guess}}
+        name="guess"
+        value=""
+        label="Guess Letter"
+        class="2xl:w-128 lg:w-80 w-64 xl:w-110"
+      />
+
+      <.button type="submit" class="mt-5">Make next guess</.button>
+    </.form>
+  </div>
+</div>

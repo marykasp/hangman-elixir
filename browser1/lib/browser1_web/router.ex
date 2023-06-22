@@ -18,7 +18,9 @@ defmodule Browser1Web.Router do
     pipe_through :browser
 
     get "/", HangmanController, :index
-    get "/:new", HangmanController, :new
+    get "/new", HangmanController, :new
+    put "/:game", HangmanController, :update
+    get "/current", HangmanController, :show
   end
 
   # Other scopes may use custom stacks.

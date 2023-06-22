@@ -43,6 +43,7 @@ defmodule Browser1Web do
         layouts: [html: Browser1Web.Layouts]
 
       import Plug.Conn
+      unquote(html_helpers())
 
       unquote(verified_routes())
     end
