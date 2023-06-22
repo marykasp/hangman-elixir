@@ -27,12 +27,12 @@ defmodule Hangman.Runtime.Server do
     Watchdog.im_alive(watcher)
     {updated_game, tally} = Game.make_move(game, guess)
     # atom reply, returned value (tally), updated state
-    {:reply, tally, updated_game}
+    {:reply, tally, {updated_game, watcher}}
   end
 
   def handle_call({:tally}, _from, {game, watcher}) do
     Watchdog.im_alive(watcher)
     # state does not change
-    {:reply, Game.tally(game), game}
+    {:reply, Game.tally(game), {game, watcher}}
   end
 end
