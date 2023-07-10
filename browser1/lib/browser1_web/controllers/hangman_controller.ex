@@ -1,6 +1,7 @@
 defmodule Browser1Web.HangmanController do
   use Browser1Web, :controller
 
+  # render the hangman game page
   def index(conn, _params) do
     render(conn, :index)
   end
