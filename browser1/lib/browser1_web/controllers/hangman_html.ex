@@ -1,6 +1,8 @@
 defmodule Browser1Web.HangmanHTML do
   use Browser1Web, :html
 
+  # this is a test update
+
   # status fields for the state of the game
   @status_fields %{
     initializing: {"intializing", "Guess the word"},
